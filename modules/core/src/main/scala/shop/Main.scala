@@ -1,9 +1,8 @@
 package shop
 
 import cats.effect._
-import org.http4s.implicits._
 import org.http4s.server.blaze._
-import shop.http.routes.BrandRoutes
+import shop.modules.HttpApi
 
 import scala.concurrent.ExecutionContext.global
 
@@ -13,7 +12,7 @@ object Main extends IOApp {
 
     BlazeServerBuilder[IO](global)
       .bindHttp(8080, "localhost")
-      .withHttpApp(new BrandRoutes[IO].routes.orNotFound)
+      .withHttpApp(HttpApi.httpApp[IO])
       .serve
       .compile
       .drain
