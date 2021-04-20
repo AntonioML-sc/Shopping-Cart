@@ -11,5 +11,8 @@ final class HealthCheckRoutes[F[_] : Defer : Monad] extends Http4sDsl[F] {
     case GET -> Root => Ok("MyHealthCheck")
   }
   val routes: HttpRoutes[F] = Router(prefixPath -> httpRoutes)
+}
 
+object HealthCheckRoutes {
+  def apply[F[_] : Defer : Monad]: HealthCheckRoutes[F] = new HealthCheckRoutes[F]
 }

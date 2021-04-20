@@ -13,6 +13,7 @@ lazy val root = (project in file("."))
 
 lazy val core = (project in file("modules/core"))
   .settings(
+    scalacOptions += "-Ymacro-annotations",
     libraryDependencies ++= Seq(
       Libraries.cats,
       Libraries.catsEffect,
@@ -23,6 +24,7 @@ lazy val core = (project in file("modules/core"))
       Libraries.http4sDsl,
       Libraries.http4sServer,
       Libraries.http4sCirce,
+      Libraries.newtype,
       compilerPlugin(Libraries.kindProjector cross CrossVersion.full),
       compilerPlugin(Libraries.betterMonadicFor)
     )

@@ -7,6 +7,7 @@ object Dependencies {
     val circe         = "0.13.0"
     val fs2           = "2.4.6"
     val http4s        = "0.21.13"
+    val newtype       = "0.4.3"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.11.3"
@@ -26,6 +27,8 @@ object Dependencies {
     val http4sDsl    = http4s("http4s-dsl")
     val http4sServer = http4s("http4s-blaze-server")
     val http4sCirce  = http4s("http4s-circe")
+
+    val newtype  = "io.estatico"       %% "newtype"        % Versions.newtype
 
     // Compiler plugins
     val betterMonadicFor = "com.olegpy"    %% "better-monadic-for" % Versions.betterMonadicFor
