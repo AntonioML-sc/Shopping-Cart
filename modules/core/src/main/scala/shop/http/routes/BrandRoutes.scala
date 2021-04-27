@@ -7,7 +7,7 @@ import org.http4s.server.Router
 import shop.services.Brands
 import shop.http.json._
 
-final class BrandRoutes[F[_] : Defer : Monad](brands: Brands[F]) extends Http4sDsl[F] {
+final class BrandRoutes[F[_]: Defer: Monad](brands: Brands[F]) extends Http4sDsl[F] {
   private[routes] val prefixPath: String = "/brands"
   private val httpRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root => Ok(brands.findAll)

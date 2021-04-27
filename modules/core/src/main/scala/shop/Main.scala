@@ -9,14 +9,15 @@ import scala.concurrent.ExecutionContext.global
 object Main extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
-
-    BlazeServerBuilder[IO](global)
-      .bindHttp(8080, "localhost")
-      .withHttpApp(HttpApi.httpApp[IO])
-      .serve
-      .compile
-      .drain
-      .as(ExitCode.Success)
+    HttpApi.httpApp[IO].flatMap { httpApp =>
+      BlazeServerBuilder[IO](global)
+        .bindHttp(8080, "localhost")
+        .withHttpApp(httpApp)
+        .serve
+        .compile
+        .drain
+        .as(ExitCode.Success)
+    }
   }
 
 }

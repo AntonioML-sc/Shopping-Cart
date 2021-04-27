@@ -21,10 +21,13 @@ lazy val core = (project in file("modules/core"))
       Libraries.circeCore,
       Libraries.circeGeneric,
       Libraries.circeParser,
+      Libraries.circeRefined,
       Libraries.http4sDsl,
       Libraries.http4sServer,
       Libraries.http4sCirce,
       Libraries.newtype,
+      Libraries.refinedCore,
+      Libraries.refinedCats,
       compilerPlugin(Libraries.kindProjector cross CrossVersion.full),
       compilerPlugin(Libraries.betterMonadicFor)
     )

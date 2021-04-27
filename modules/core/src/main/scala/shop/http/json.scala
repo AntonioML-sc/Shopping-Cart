@@ -1,15 +1,17 @@
 package shop.http
 
 import cats.Applicative
+import eu.timepit.refined.types.all.NonEmptyString
 import io.circe._
 import io.circe.generic.semiauto.deriveCodec
 import io.estatico.newtype.Coercible
 import io.estatico.newtype.ops._
 import org.http4s.EntityEncoder
 import org.http4s.circe.jsonEncoderOf
-import shop.domain.brand.Brand
+import shop.domain.brand.{Brand, BrandParam}
 import shop.domain.category.Category
 import shop.domain.item.Item
+import io.circe.refined._
 
 object json extends JsonCodecs {
   implicit def deriveEntityEncoder[F[_]: Applicative, A: Encoder]: EntityEncoder[F, A] = jsonEncoderOf[F, A]
@@ -32,4 +34,7 @@ private[http] trait JsonCodecs {
   implicit val brandCodec: Codec[Brand] = deriveCodec[Brand]
   implicit val categoryCodec: Codec[Category] = deriveCodec[Category]
   implicit val itemCodec: Codec[Item] = deriveCodec[Item]
+  implicit val brandParamDecoder: Decoder[BrandParam] = {
+    Decoder.forProduct1[BrandParam, NonEmptyString]("name")(BrandParam(_))
+  }
 }
