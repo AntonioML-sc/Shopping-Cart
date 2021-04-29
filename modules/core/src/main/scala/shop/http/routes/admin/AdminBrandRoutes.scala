@@ -17,7 +17,9 @@ final class AdminBrandRoutes[F[_]: Defer: Monad: JsonDecoder](brands: Brands[F])
        Created(brands.create(bp.toDomain))
      }
    }
-
   val routes: HttpRoutes[F] = Router(prefixPath -> httpRoutes)
+}
 
+object AdminBrandRoutes {
+  def apply[F[_]: Defer: Monad: JsonDecoder](brands: Brands[F])(implicit ME: MonadError[F, Throwable]): AdminBrandRoutes[F] = new AdminBrandRoutes[F](brands)
 }

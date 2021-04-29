@@ -9,8 +9,8 @@ import io.estatico.newtype.ops._
 import org.http4s.EntityEncoder
 import org.http4s.circe.jsonEncoderOf
 import shop.domain.brand.{Brand, BrandParam}
-import shop.domain.category.Category
-import shop.domain.item.Item
+import shop.domain.category.{Category, CategoryParam}
+import shop.domain.item.{Item, ItemParam}
 import io.circe.refined._
 
 object json extends JsonCodecs {
@@ -34,7 +34,10 @@ private[http] trait JsonCodecs {
   implicit val brandCodec: Codec[Brand] = deriveCodec[Brand]
   implicit val categoryCodec: Codec[Category] = deriveCodec[Category]
   implicit val itemCodec: Codec[Item] = deriveCodec[Item]
-  implicit val brandParamDecoder: Decoder[BrandParam] = {
-    Decoder.forProduct1[BrandParam, NonEmptyString]("name")(BrandParam(_))
-  }
+  implicit val brandParamDecoder: Decoder[BrandParam] =
+    Decoder.forProduct1[BrandParam, NonEmptyString]("name")(BrandParam.apply)
+  implicit val categoryParamDecoder: Decoder[CategoryParam] =
+    Decoder.forProduct1[CategoryParam, NonEmptyString]("name")(CategoryParam.apply)
+  implicit val itemParamDecoder: Decoder[ItemParam] =
+    Decoder.forProduct1[ItemParam, NonEmptyString]("name")(ItemParam.apply)
 }

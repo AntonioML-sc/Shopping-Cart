@@ -1,24 +1,25 @@
 package shop.services
 
-import cats.Applicative
-import cats.implicits.catsSyntaxApplicativeId
+import cats.effect.Sync
+import cats.effect.concurrent.Ref
+import cats.implicits._
 import shop.domain.category.{Category, CategoryId, CategoryName}
 
 import java.util.UUID
 
 trait Categories[F[_]] {
   def findAll: F[List[Category]]
+  def create(name: CategoryName): F[Unit]
 }
 
 object Categories {
-  def apply[F[_]: Applicative]: Categories[F] = new LiveCategories[F]
-  def make[F[_]: Applicative]: F[Categories[F]] = Applicative[F].pure(new LiveCategories[F])
+  def make[F[_]: Sync]: F[Categories[F]] = Ref.of[F, List[Category]](List.empty[Category]).map(ref => new RefCategories[F](ref))
 }
 
-final class LiveCategories[F[_]: Applicative] extends Categories[F] {
-  // override def findAll: F[List[String]] = List("Guitars").pure[F]
+final class RefCategories[F[_]](ref: Ref[F, List[Category]]) extends Categories[F] {
+  override def findAll: F[List[Category]] = ref.get
 
-  override def findAll: F[List[Category]] = List(
-    Category(CategoryId(UUID.randomUUID()), CategoryName("Guitars"))
-  ).pure
+  override def create(name: CategoryName): F[Unit] = ref.update { categories =>
+    categories.appended(Category(CategoryId(UUID.randomUUID()), name))
+  }
 }
