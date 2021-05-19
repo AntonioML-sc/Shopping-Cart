@@ -1,7 +1,7 @@
 package shop.modules
 
-import cats.effect.{Resource, Sync}
-import shop.services.{Brands, Categories, Items}
+import cats.effect.{ Resource, Sync }
+import shop.services.{ Brands, Categories, Items }
 import cats.implicits._
 import skunk.Session
 

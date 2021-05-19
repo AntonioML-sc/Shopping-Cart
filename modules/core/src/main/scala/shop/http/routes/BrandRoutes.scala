@@ -1,6 +1,6 @@
 package shop.http.routes
 
-import cats.{Defer, Monad}
+import cats.{ Defer, Monad }
 import org.http4s.HttpRoutes
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
@@ -17,5 +17,5 @@ final class BrandRoutes[F[_]: Defer: Monad](brands: Brands[F]) extends Http4sDsl
 }
 
 object BrandRoutes {
-  def apply[F[_] : Defer : Monad](brands: Brands[F]): BrandRoutes[F] = new BrandRoutes[F](brands)
+  def apply[F[_]: Defer: Monad](brands: Brands[F]): BrandRoutes[F] = new BrandRoutes[F](brands)
 }

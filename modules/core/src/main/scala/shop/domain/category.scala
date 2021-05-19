@@ -17,5 +17,3 @@ object category {
     def toDomain: CategoryName = CategoryName(value.value.toLowerCase.capitalize)
   }
 }
-
-

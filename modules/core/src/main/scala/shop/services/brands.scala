@@ -1,12 +1,12 @@
 package shop.services
 
-import cats.effect.{Bracket, BracketThrow, Resource}
+import cats.effect.{ Bracket, BracketThrow, Resource }
 import cats.implicits._
-import shop.domain.brand.{Brand, BrandId, BrandName}
-import shop.services.BrandSQL.{insertBrand, selectAll}
+import shop.domain.brand.{ Brand, BrandId, BrandName }
+import shop.services.BrandSQL.{ insertBrand, selectAll }
 import skunk._
 import skunk.codec.all._
-import skunk.{Codec, Command, Query}
+import skunk.{ Codec, Command, Query }
 import skunk.implicits._
 
 import java.util.UUID
@@ -26,19 +26,17 @@ final class LiveBrands[F[_]: BracketThrow](sessionPool: Resource[F, Session[F]])
 
   override def create(name: BrandName): F[Unit] =
     sessionPool.use { session =>
-      session.prepare(insertBrand).use { cmd =>
-        cmd.execute(name.toBrand(BrandId(UUID.randomUUID()))).void
-      }
+      session.prepare(insertBrand).use(cmd => cmd.execute(name.toBrand(BrandId(UUID.randomUUID()))).void)
     }
 }
 
 private object BrandSQL {
-  val brandId: Codec[BrandId] = uuid.imap[BrandId](uuid => BrandId(uuid))(bId => bId.value)
+  val brandId: Codec[BrandId]     = uuid.imap[BrandId](uuid => BrandId(uuid))(bId => bId.value)
   val brandName: Codec[BrandName] = varchar.imap[BrandName](varchar => BrandName(varchar))(bName => bName.value)
   val brand: Codec[Brand] =
     (brandId ~ brandName).imap[Brand] {
       case bId ~ bName => Brand(bId, bName)
-    } (b => b.uuid ~ b.name)
+    }(b => b.uuid ~ b.name)
   val selectAll: Query[Void, Brand] =
     sql"""
          SELECT * FROM brands

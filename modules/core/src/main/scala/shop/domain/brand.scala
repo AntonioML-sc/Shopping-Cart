@@ -17,5 +17,3 @@ object brand {
     def toDomain: BrandName = BrandName(value.value.toLowerCase.capitalize)
   }
 }
-
-

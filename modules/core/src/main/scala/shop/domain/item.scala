@@ -17,5 +17,3 @@ object item {
     def toDomain: ItemName = ItemName(value.value.toLowerCase.capitalize)
   }
 }
-
-

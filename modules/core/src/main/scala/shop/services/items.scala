@@ -1,12 +1,12 @@
 package shop.services
 
-import cats.effect.{Bracket, BracketThrow, Resource}
+import cats.effect.{ Bracket, BracketThrow, Resource }
 import cats.implicits._
-import shop.domain.item.{Item, ItemId, ItemName}
-import shop.services.ItemSQL.{insertItem, selectAll}
+import shop.domain.item.{ Item, ItemId, ItemName }
+import shop.services.ItemSQL.{ insertItem, selectAll }
 import skunk._
 import skunk.codec.all._
-import skunk.{Codec, Command, Query}
+import skunk.{ Codec, Command, Query }
 import skunk.implicits._
 
 import java.util.UUID
@@ -26,19 +26,17 @@ final class LiveItems[F[_]: BracketThrow](sessionPool: Resource[F, Session[F]]) 
 
   override def create(name: ItemName): F[Unit] =
     sessionPool.use { session =>
-      session.prepare(insertItem).use {
-        cmd => cmd.execute(name.toItem(ItemId(UUID.randomUUID()))).void
-      }
+      session.prepare(insertItem).use(cmd => cmd.execute(name.toItem(ItemId(UUID.randomUUID()))).void)
     }
 }
 
 private object ItemSQL {
-  val itemId: Codec[ItemId] = uuid.imap[ItemId](uuid => ItemId(uuid))(iId => iId.value)
+  val itemId: Codec[ItemId]     = uuid.imap[ItemId](uuid => ItemId(uuid))(iId => iId.value)
   val itemName: Codec[ItemName] = varchar.imap[ItemName](varchar => ItemName(varchar))(iName => iName.value)
   val item: Codec[Item] =
     (itemId ~ itemName).imap[Item] {
       case iId ~ iName => Item(iId, iName)
-    } (i => i.uuid ~ i.name)
+    }(i => i.uuid ~ i.name)
   val selectAll: Query[Void, Item] =
     sql"""
          SELECT * FROM items
