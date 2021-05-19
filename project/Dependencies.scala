@@ -9,6 +9,7 @@ object Dependencies {
     val http4s        = "0.21.13"
     val newtype       = "0.4.3"
     val refined       = "0.9.19"
+    val skunk         = "0.0.24"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.11.3"
@@ -34,6 +35,10 @@ object Dependencies {
 
     val refinedCore = "eu.timepit" %% "refined"      % Versions.refined
     val refinedCats = "eu.timepit" %% "refined-cats" % Versions.refined
+
+    // Database
+    val skunkCore  = "org.tpolecat" %% "skunk-core"  % Versions.skunk
+    val skunkCirce = "org.tpolecat" %% "skunk-circe" % Versions.skunk
 
     // Compiler plugins
     val betterMonadicFor = "com.olegpy"    %% "better-monadic-for" % Versions.betterMonadicFor

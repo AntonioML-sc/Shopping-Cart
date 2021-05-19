@@ -28,6 +28,8 @@ lazy val core = (project in file("modules/core"))
       Libraries.newtype,
       Libraries.refinedCore,
       Libraries.refinedCats,
+      Libraries.skunkCore,
+      Libraries.skunkCirce,
       compilerPlugin(Libraries.kindProjector cross CrossVersion.full),
       compilerPlugin(Libraries.betterMonadicFor)
     )
