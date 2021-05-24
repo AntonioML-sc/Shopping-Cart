@@ -19,7 +19,7 @@ final case class HttpApi[F[_]: Sync](services: Services[F]) {
   private val adminItemRoutes     = AdminItemRoutes[F](services.items).routes
   private val categoryRoutes      = CategoryRoutes[F](services.categories).routes
   private val adminCategoryRoutes = AdminCategoryRoutes[F](services.categories).routes
-  private val healthCheckRoutes   = HealthCheckRoutes[F].routes
+  private val healthCheckRoutes   = HealthCheckRoutes[F](services.healthCheck).routes
   val httpApp: Kleisli[F, Request[F], Response[F]] = (brandRoutes <+> adminBrandRoutes <+> itemRoutes <+>
       adminItemRoutes <+> categoryRoutes <+> adminCategoryRoutes <+> healthCheckRoutes).orNotFound
 }

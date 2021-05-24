@@ -12,6 +12,7 @@ import shop.domain.brand.{ Brand, BrandParam }
 import shop.domain.category.{ Category, CategoryParam }
 import shop.domain.item.{ Item, ItemParam }
 import io.circe.refined._
+import shop.domain.healthCheck.{ AppStatus, PostgresStatus }
 
 object json extends JsonCodecs {
   implicit def deriveEntityEncoder[F[_]: Applicative, A: Encoder]: EntityEncoder[F, A] = jsonEncoderOf[F, A]
@@ -31,13 +32,16 @@ private[http] trait JsonCodecs {
   implicit def coercibleKeyEncoder[A: Coercible[B, *], B: KeyEncoder]: KeyEncoder[A] =
     KeyEncoder[B].contramap[A](_.repr.asInstanceOf[B])
 
-  implicit val brandCodec: Codec[Brand]       = deriveCodec[Brand]
-  implicit val categoryCodec: Codec[Category] = deriveCodec[Category]
-  implicit val itemCodec: Codec[Item]         = deriveCodec[Item]
+  implicit val brandCodec: Codec[Brand]           = deriveCodec[Brand]
+  implicit val categoryCodec: Codec[Category]     = deriveCodec[Category]
+  implicit val itemCodec: Codec[Item]             = deriveCodec[Item]
+  implicit val healthCheckCodec: Codec[AppStatus] = deriveCodec[AppStatus]
   implicit val brandParamDecoder: Decoder[BrandParam] =
     Decoder.forProduct1[BrandParam, NonEmptyString]("name")(BrandParam.apply)
   implicit val categoryParamDecoder: Decoder[CategoryParam] =
     Decoder.forProduct1[CategoryParam, NonEmptyString]("name")(CategoryParam.apply)
   implicit val itemParamDecoder: Decoder[ItemParam] =
     Decoder.forProduct1[ItemParam, NonEmptyString]("name")(ItemParam.apply)
+  implicit val postgresStatusDecoder: Decoder[PostgresStatus] =
+    Decoder.forProduct1[PostgresStatus, Boolean]("name")(PostgresStatus.apply)
 }

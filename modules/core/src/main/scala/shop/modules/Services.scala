@@ -1,17 +1,23 @@
 package shop.modules
 
-import cats.effect.{ Resource, Sync }
-import shop.services.{ Brands, Categories, Items }
+import cats.effect.{ Concurrent, Resource, Sync, Timer }
+import shop.services.{ Brands, Categories, HealthCheck, Items }
 import cats.implicits._
 import skunk.Session
 
 object Services {
-  def make[F[_]: Sync](sessionPool: Resource[F, Session[F]]): F[Services[F]] =
+  def make[F[_]: Sync: Concurrent: Timer](sessionPool: Resource[F, Session[F]]): F[Services[F]] =
     for {
-      brands     <- Brands.make[F](sessionPool)
-      items      <- Items.make[F](sessionPool)
-      categories <- Categories.make[F](sessionPool)
-    } yield Services(brands, items, categories)
+      brands      <- Brands.make[F](sessionPool)
+      items       <- Items.make[F](sessionPool)
+      categories  <- Categories.make[F](sessionPool)
+      healthCheck <- HealthCheck.make[F](sessionPool)
+    } yield Services(brands, items, categories, healthCheck)
 }
 
-final case class Services[F[_]] private (brands: Brands[F], items: Items[F], categories: Categories[F])
+final case class Services[F[_]] private (
+    brands: Brands[F],
+    items: Items[F],
+    categories: Categories[F],
+    healthCheck: HealthCheck[F]
+)
