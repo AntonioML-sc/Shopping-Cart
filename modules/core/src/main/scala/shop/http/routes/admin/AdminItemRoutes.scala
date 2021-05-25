@@ -3,6 +3,7 @@ package shop.http.routes.admin
 import cats.implicits._
 import cats.{ Defer, Monad, MonadError }
 import org.http4s.HttpRoutes
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
@@ -20,8 +21,8 @@ final class AdminItemRoutes[F[_]: Defer: Monad: JsonDecoder](items: Items[F])(im
     case DELETE -> Root / "all"            => Ok(items.clearAll)
     case DELETE -> Root / "byId" / id      => Ok(items.deleteById(ItemId(UUID.fromString(id))))
     case DELETE -> Root / "byName" / iName => Ok(items.deleteByName(ItemName(iName)))
-    case ar @ PUT -> Root / oldName =>
-      ar.asJsonDecode[ItemParam].flatMap(ip => Ok(items.modifyByName(ItemName(oldName), ip.toDomain)))
+    case newName @ PUT -> Root / oldName =>
+      newName.asJsonDecode[ItemParam].flatMap(newName => Ok(items.modifyByName(ItemName(oldName), newName.toDomain)))
   }
   val routes: HttpRoutes[F] = Router(prefixPath -> httpRoutes)
 }
