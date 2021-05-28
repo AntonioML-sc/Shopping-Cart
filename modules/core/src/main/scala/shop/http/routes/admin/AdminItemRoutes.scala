@@ -7,7 +7,7 @@ import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
-import shop.domain.item.{ ItemId, ItemName, ItemParam }
+import shop.domain.item.{ ItemId, ItemName, ItemParam, OldItemName, RenameItemInfo }
 import shop.http.json.itemParamDecoder
 import shop.services.Items
 
@@ -22,7 +22,9 @@ final class AdminItemRoutes[F[_]: Defer: Monad: JsonDecoder](items: Items[F])(im
     case DELETE -> Root / "byId" / id      => Ok(items.deleteById(ItemId(UUID.fromString(id))))
     case DELETE -> Root / "byName" / iName => Ok(items.deleteByName(ItemName(iName)))
     case newName @ PUT -> Root / oldName =>
-      newName.asJsonDecode[ItemParam].flatMap(newName => Ok(items.modifyByName(ItemName(oldName), newName.toDomain)))
+      newName
+        .asJsonDecode[ItemParam]
+        .flatMap(nName => Ok(items.modifyByName(RenameItemInfo(nName.toNewName, OldItemName(oldName)))))
   }
   val routes: HttpRoutes[F] = Router(prefixPath -> httpRoutes)
 }

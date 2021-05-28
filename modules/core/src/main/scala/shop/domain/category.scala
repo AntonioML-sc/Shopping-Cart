@@ -14,6 +14,13 @@ object category {
   case class Category(uuid: CategoryId, name: CategoryName)
 
   @newtype case class CategoryParam(value: NonEmptyString) {
-    def toDomain: CategoryName = CategoryName(value.value.toLowerCase.capitalize)
+    def toDomain: CategoryName     = CategoryName(value.value.toLowerCase.capitalize)
+    def toNewName: NewCategoryName = NewCategoryName(value.value.toLowerCase.capitalize)
+    def toOldName: OldCategoryName = OldCategoryName(value.value.toLowerCase.capitalize)
   }
+
+  @newtype case class NewCategoryName(value: String)
+  @newtype case class OldCategoryName(value: String)
+
+  case class RenameCatInfo(newName: NewCategoryName, oldName: OldCategoryName)
 }

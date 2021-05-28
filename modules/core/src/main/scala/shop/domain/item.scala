@@ -14,6 +14,13 @@ object item {
   case class Item(uuid: ItemId, name: ItemName)
 
   @newtype case class ItemParam(value: NonEmptyString) {
-    def toDomain: ItemName = ItemName(value.value.toLowerCase.capitalize)
+    def toDomain: ItemName     = ItemName(value.value)
+    def toNewName: NewItemName = NewItemName(value.value)
+    def toOldName: OldItemName = OldItemName(value.value)
   }
+
+  @newtype case class NewItemName(value: String)
+  @newtype case class OldItemName(value: String)
+
+  case class RenameItemInfo(newName: NewItemName, oldName: OldItemName)
 }
