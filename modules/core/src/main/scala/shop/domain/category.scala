@@ -1,7 +1,10 @@
 package shop.domain
 
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.string.Uuid
 import eu.timepit.refined.types.string.NonEmptyString
 import io.estatico.newtype.macros.newtype
+
 import java.util.UUID
 
 object category {
@@ -13,10 +16,14 @@ object category {
 
   case class Category(uuid: CategoryId, name: CategoryName)
 
-  @newtype case class CategoryParam(value: NonEmptyString) {
+  @newtype case class CategoryNameParam(value: NonEmptyString) {
     def toDomain: CategoryName     = CategoryName(value.value.toLowerCase.capitalize)
     def toNewName: NewCategoryName = NewCategoryName(value.value.toLowerCase.capitalize)
     def toOldName: OldCategoryName = OldCategoryName(value.value.toLowerCase.capitalize)
+  }
+
+  @newtype case class CategoryIdParam(value: String Refined Uuid) {
+    def toDomain: CategoryId = CategoryId(UUID.fromString(value.value))
   }
 
   @newtype case class NewCategoryName(value: String)

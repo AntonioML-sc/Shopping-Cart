@@ -1,8 +1,12 @@
 package shop.domain
 
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.string.Uuid
 import eu.timepit.refined.types.all.NonEmptyString
+
 import java.util.UUID
 import io.estatico.newtype.macros.newtype
+import shop.effects.GenUUID
 
 object brand {
   @newtype case class BrandId(value: UUID)
@@ -13,10 +17,14 @@ object brand {
 
   case class Brand(uuid: BrandId, name: BrandName)
 
-  @newtype case class BrandParam(value: NonEmptyString) {
+  @newtype case class BrandNameParam(value: NonEmptyString) {
     def toDomain: BrandName     = BrandName(value.value)
     def toNewName: NewBrandName = NewBrandName(value.value)
     def toOldName: OldBrandName = OldBrandName(value.value)
+  }
+
+  @newtype case class BrandIdParam(value: String Refined Uuid) {
+    def toDomain: BrandId = BrandId(UUID.fromString(value.value))
   }
 
   @newtype case class NewBrandName(value: String)

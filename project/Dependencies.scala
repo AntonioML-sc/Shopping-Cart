@@ -10,6 +10,7 @@ object Dependencies {
     val newtype    = "0.4.3"
     val refined    = "0.9.19"
     val skunk      = "0.0.24"
+    val squants    = "1.8.0"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.11.3"
@@ -35,6 +36,8 @@ object Dependencies {
 
     val refinedCore = "eu.timepit" %% "refined"      % Versions.refined
     val refinedCats = "eu.timepit" %% "refined-cats" % Versions.refined
+
+    val squants = "org.typelevel" %% "squants" % Versions.squants
 
     // Database
     val skunkCore  = "org.tpolecat" %% "skunk-core"  % Versions.skunk
